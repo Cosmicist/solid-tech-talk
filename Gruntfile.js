@@ -112,6 +112,15 @@ module.exports = function(grunt) {
 			]
 		},
 
+		processhtml: {
+			options: {},
+			dist: {
+				files: {
+					'index.html': ['src/index.html']
+				}
+			}
+		},
+
 		watch: {
 			options: {
 				livereload: true
@@ -129,7 +138,8 @@ module.exports = function(grunt) {
 				tasks: 'css-core'
 			},
 			html: {
-				files: [ 'index.html']
+				files: [ 'src/**/*.html' ],
+				tasks: 'processhtml'
 			},
 			markdown: {
 				files: [ './*.md' ]
@@ -148,9 +158,10 @@ module.exports = function(grunt) {
 	grunt.loadNpmTasks( 'grunt-contrib-connect' );
 	grunt.loadNpmTasks( 'grunt-autoprefixer' );
 	grunt.loadNpmTasks( 'grunt-zip' );
+	grunt.loadNpmTasks( 'grunt-processhtml' );
 
 	// Default task
-	grunt.registerTask( 'default', [ 'css', 'js' ] );
+	grunt.registerTask( 'default', [ 'css', 'js', 'processhtml' ] );
 
 	// JS task
 	grunt.registerTask( 'js', [ 'jshint', 'uglify', 'qunit' ] );
@@ -168,7 +179,7 @@ module.exports = function(grunt) {
 	grunt.registerTask( 'package', [ 'default', 'zip' ] );
 
 	// Serve presentation locally
-	grunt.registerTask( 'serve', [ 'connect', 'watch' ] );
+	grunt.registerTask( 'serve', [ 'connect', 'processhtml', 'watch' ] );
 
 	// Run tests
 	grunt.registerTask( 'test', [ 'jshint', 'qunit' ] );

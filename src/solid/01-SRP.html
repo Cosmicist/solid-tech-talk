@@ -1,0 +1,102 @@
+<!-- SRP - SOLID -->
+<section>
+    <section>
+        <h2>Single Responsibility Principle</h2>
+        <p>
+            <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+            &ldquo;...states that each software module should have one and only one reason to change.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Robert (Uncle Bob) C. Martin</em></small>
+        </p>
+    </section>
+
+    <section>
+        <h3>¿Razones para cambiar?</h3>
+        <ul>
+            <li class="fragment fade-in">Refactoring?</li>
+            <li class="fragment fade-in">Bug-fixing?</li>
+        </ul>
+        <p class="fragment fade-in">
+            Estas son <strong class="fragment highlight-red">responsabilidades</strong> del desarollador, no del programa.
+        </p>
+    </section>
+    <section>
+        <img src="images/spiderman-responsibility.jpg">
+    </section>
+    <section>
+        <h2>Responsabilidades!</h2>
+        <p>
+            ¿A quién debe responder el <code>[programa|aplicación|clase|librería|etc]</code>?
+        </p>
+        <p class="fragment fade-in">
+            <big>
+                <strong class="red">Personas</strong> que pueden hacer que el código cambie.
+            </big>
+        </p>
+    </section>
+    <section>
+        <pre><code style="word-wrap: break-word;" class="php hljs">class Article
+{
+    // ... constructor, getters, setters, etc...
+
+    public function render()
+    {
+        $format  = '<h1>%s</h1>';
+        $format .= '<div class="article-meta">Publicado el %s, por %s</div>';
+        $format .= '<div class="article-body">%s</div>';
+
+        return sprintf(
+            $format,
+            $this->getTitle(),
+            $this->getPublishDate(),
+            $this->getAuthor()->getName(),
+            $this->getBody()
+        );
+    }
+
+    public function save()
+    {
+        $this->db->insert('articles', [
+            'title' => $this->getTitle(),
+            'author' => $this->getAuthor()->getId(),
+            'body' => $this->getBody(),
+        ]);
+    }
+}</code></pre>
+    </section>
+    <section>
+        <h2>¿Quienes podrían causar que este codigo cambie?</h2>
+
+        <ul>
+            <li class="fragment fade-in"><big>Front-end dudes? <i class="fragment fade-in green fa fa-check"></i></big></li>
+            <li class="fragment fade-in"><big>DBA <i class="fragment fade-in green fa fa-check"></i></big></li>
+        </ul>
+    </section>
+    <section>
+        <h1>SI</h1>
+        <p class="fragment fade-in"><strong class="red">Siempre</strong> van a haber terceros que causen cambios.</p>
+        <p class="fragment fade-in"><big>Pero!</big></p>
+        <p class="fragment fade-in">
+            <big>Que sea <strong class="green">solo una sola persona</strong> por clase.</big>
+        </p>
+    </section>
+    <section>
+        <h2>¿Mejoras?</h2>
+        <p>
+            <code>render()</code> y <code>save()</code> son responsabilidades extras que <code>Article</code>
+            <strong>no necesita conocer.</strong>
+        </p>
+        <ul>
+            <li class="fragment fade-in">
+                <i class="fa fa-trash fa-fw"></i>
+                <code>render()</code>: puede irse a una vista, o a otra clase si fuera necesario
+            </li>
+            <li class="fragment fade-in">
+                <i class="fa fa-trash fa-fw"></i>
+                <code>save()</code>: lo movemos a un repositorio
+            </li>
+        </ul>
+    </section>
+</section>
+<!-- /SRP - SOLID -->

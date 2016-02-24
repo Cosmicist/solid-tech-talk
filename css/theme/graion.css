@@ -327,6 +327,10 @@ body {
 .reveal .slides section .fragment.highlight-blue.visible {
   color: #558CBF; }
 
+.reveal .yellow,
+.reveal .slides section .fragment.highlight-yellow.visible {
+  color: #BFB655; }
+
 .reveal .red,
 .reveal .slides section .fragment.highlight-current-red.current-fragment {
   color: #BF555B; }
@@ -338,6 +342,10 @@ body {
 .reveal .blue,
 .reveal .slides section .fragment.highlight-current-blue.current-fragment {
   color: #558CBF; }
+
+.reveal .yellow,
+.reveal .slides section .fragment.highlight-current-yellow.current-fragment {
+  color: #BFB655; }
 
 .reveal big {
   font-size: 1.2em; }

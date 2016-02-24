@@ -12,7 +12,8 @@
 		<img src="images/scrubs-head-explodes.gif">
 	</section>
 	<section>
-		<p>Siendo <code>X</code> un subtipo <code>T</code></p>
+		<h3>Vamos por partes</h3>
+		<p class="fragment">Siendo <code>X</code> un subtipo <code>T</code></p>
 		<p class="fragment"><code>X</code> tiene que poder ser usada donde se requiera <code>T</code></p>
 		<p class="fragment"><strong>Sin alterar el correcto funcionamiento del programa</strong></p>
 	</section>
@@ -23,8 +24,9 @@
 	<section>
 		<h3>¿Cómo logramos esto?</h3>
 		<ul>
-			<li class="fragment"><big>Precondiciónes igual o más restrictivas</big></li>
-			<li class="fragment"><big>Postcondiciónes igual o menos restrictivas</big></li>
+			<li class="fragment"><big><strong>Interfases</strong> <i class="fa fa-star yellow"></i> / Clases abstractas</big></li>
+			<li class="fragment"><big><strong>Precondiciónes</strong> igual o más restrictivas</big></li>
+			<li class="fragment"><big><strong>Postcondiciónes</strong> igual o menos restrictivas</big></li>
 		</ul>
 	</section>
 	<section>
@@ -35,7 +37,7 @@
 			<li class="fragment"><code>XmlRenderer</code></li>
 		</ul>
 		<p class="fragment">Todas subtipos de <code>Renderer</code></p>
-		<p class="fragment">Sus pre y post condiciónes igual de restrictivas</p>
+		<p class="fragment">Sus <em>pre</em> y <em>post</em> condiciónes igual de restrictivas</p>
 	</section>
 	<section>
 		<h1>LSP <i class="fa fa-check"></i></h1>

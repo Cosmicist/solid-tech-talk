@@ -21,6 +21,7 @@
 $red: #BF555B;
 $green: #74C374;
 $blue: #558CBF;
+$yellow: #BFB655;
 
 // Override theme settings (see ../template/settings.scss)
 $headingColor: $green;
@@ -86,6 +87,10 @@ $linkColorHover: lighten( $linkColor, 20% );
 .reveal .slides section .fragment.highlight-blue.visible {
 	color: $blue;
 }
+.reveal .yellow,
+.reveal .slides section .fragment.highlight-yellow.visible {
+	color: $yellow;
+}
 
 .reveal .red,
 .reveal .slides section .fragment.highlight-current-red.current-fragment {
@@ -98,6 +103,10 @@ $linkColorHover: lighten( $linkColor, 20% );
 .reveal .blue,
 .reveal .slides section .fragment.highlight-current-blue.current-fragment {
 	color: $blue;
+}
+.reveal .yellow,
+.reveal .slides section .fragment.highlight-current-yellow.current-fragment {
+	color: $yellow;
 }
 
 .reveal big {

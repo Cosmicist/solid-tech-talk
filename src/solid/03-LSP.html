@@ -28,7 +28,27 @@
 		</ul>
 	</section>
 	<section>
-		<h3>Rompamos el ejemplo anterior</h3>
+		<h3>En el ejemplo anterior teníamos</h3>
+		<ul>
+			<li class="fragment"><code>HtmlRenderer</code></li>
+			<li class="fragment"><code>JsonRenderer</code></li>
+			<li class="fragment"><code>XmlRenderer</code></li>
+		</ul>
+		<p class="fragment">Todas subtipos de <code>Renderer</code></p>
+		<p class="fragment">Sus pre y post condiciónes igual de restrictivas</p>
+	</section>
+	<section>
+		<h1>LSP <i class="fa fa-check"></i></h1>
+		<p class="fragment">
+			Todos los principios de <strong class="green">SOLID</strong>
+			están muy interrelacionados.
+		</p>
+		<p class="fragment">
+			Si se rompe uno, se rompen varios <span class="fragment">o todos.</span>
+		</p>
+	</section>
+	<section>
+		<h3>Veamos un mal ejemplo</h3>
 		<pre><code class="php hljs">class OtherXmlRenderer extends XmlRenderer {
 
     public function render($data) { // precondición menos restrictiva

@@ -4,8 +4,7 @@
         <h2>Open/Closed Principle</h2>
 
         <p>
-            <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
-            &ldquo;A satisfactory modular decomposition technique must satisfy one more requirement: It should yield modules that are both open and closed.&rdquo;</q>
+            <q>&ldquo;A satisfactory modular decomposition technique must satisfy one more requirement: It should yield modules that are both open and closed.&rdquo;</q>
         </p>
         <p>
             <small><em>&mdash; Bertrand Meyer, 1988</em></small>
@@ -22,17 +21,17 @@
         <p>
             <small><em>&mdash; Robert (Uncle Bob) C. Martin</em></small>
         </p>
-        <h3 class="fragment fade-in"><big>¿Mejor?</big></h3>
+        <h3 class="fragment"><big>¿Mejor?</big></h3>
     </section>
     <section>
         <h3>O sea...</h3>
-        <p class="fragment fade-in"><big>Abierta <em class="green">(Open)</em> para <em class="green">extensión</em></big></p>
-        <p class="fragment fade-in"><big>Cerrada <em class="green">(Closed)</em> para <em class="green">modificación</em></big></p>
+        <p class="fragment"><big>Abierta <em class="green">(Open)</em> para <em class="green">extensión</em></big></p>
+        <p class="fragment"><big>Cerrada <em class="green">(Closed)</em> para <em class="green">modificación</em></big></p>
     </section>
     <section>
         <h3>Shotgun Surgery</h3>
         <p>Cuando para arreglar algo o agregar una feature hay que modificar codigo por todos lados</p>
-        <p class="fragment fade-in"><big>¿Les suena familiar?</big></p>
+        <p class="fragment"><big>¿Les suena familiar?</big></p>
     </section>
     <section>
         <h3>Mejoremos el ejemplo anterior</h3>
@@ -63,6 +62,82 @@
 
 $out = new Output($article->toArray());
 $out->render('json');</code></pre>
+    </section>
+    <section>
+        <h1>SRP <i class="fa fa-check"></i></h1>
+
+        <p><code>Article</code> ya no se renderiza a si mismo</p>
+    </section>
+    <section>
+        <h1>OCP <i class="fa fa-times red"></i></h1>
+
+        <p class="fragment"><code>Output</code> sabe demasiado</p>
+
+        <img class="fragment" src="images/output-knows-too-much.jpg">
+    </section>
+    <section>
+        <h3>Code smell: Type checking</h3>
+        <ul>
+            <li class="fragment"><big><code>switch</code></big></li>
+            <li class="fragment"><big><code>instanceof</code></big></li>
+            <li class="fragment"><big><code>is_a</code></big></li>
+            <li class="fragment"><big>etc...</big></li>
+        </ul>
+    </section>
+    <section>
+        <h2>¿Si quisieramos agregar otro formato?</h2>
+    </section>
+    <section>
+        <h3>Más mejoras!</h3>
+        <pre><code class="php hljs">class Output {
+
+    // ...
+
+    public function render(Renderer $renderer) {
+        return $renderer->render($this->getData());
+    }
+}</code></pre>
+    </section>
+    <section>
+        <pre><code class="php hljs">interface Renderer {
+    /**
+     * @return string
+     */
+    public function render(array $data);
+}
+
+class HtmlRenderer implements Renderer { /* .. */ }
+class JsonRenderer implements Renderer { /* .. */ }
+
+class XmlRenderer implements Renderer {
+
+    public function render(array $data) {
+        $out = '&lt;data>';
+        foreach ($data as $key => $value) {
+            $out .= "&lt;$key>$value&lt;/$key>";
+        }
+        $out .= '&lt;data>';
+
+        return $out;
+    }
+}</code></pre>
+        <pre><code class="php hljs" data-noescape>$out = new Output(<mark>(new ArticleTransformer)->transform($article)</mark>);
+$out->render(new XmlRenderer);</code></pre>
+    </section>
+    <section>
+        <h3>Extra credit</h3>
+        <pre class="fragment"><code class="php hljs">class ArticleTransformer {
+    public function transform(Article $article) {
+        return [
+            'id' => (int) $article->getId(),
+            'title' => $article->getTitle(),
+            'content' => $article->getContent(),
+            'published_at' => $article->getPublishDate()
+                ->toDateTimeString(),     
+            // etc...
+        ];
+    }
+}</code></pre>
     </section>
 </section>
 <!-- /OCP - SOLID -->

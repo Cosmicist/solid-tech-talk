@@ -28,6 +28,9 @@ $headingFont: 'Lato', Impact, sans-serif;
 $headingTextTransform: none;
 $headingTextShadow: 0px 0px 6px rgba(0,0,0,0.2);
 $heading1TextShadow: 0 1px 0 darken($headingColor, 20%), 0 2px 0 darken($headingColor, 30%), 0 3px 0 darken($headingColor, 40%), 0 4px 0 darken($headingColor, 45%), 0 5px 0 darken($headingColor, 45%), 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 20px 20px rgba(0,0,0,.15);
+$heading1TextShadowRed: 0 1px 0 darken($red, 20%), 0 2px 0 darken($red, 30%), 0 3px 0 darken($red, 40%), 0 4px 0 darken($red, 45%), 0 5px 0 darken($red, 45%), 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 20px 20px rgba(0,0,0,.15);
+$heading1TextShadowGreen: 0 1px 0 darken($green, 20%), 0 2px 0 darken($green, 30%), 0 3px 0 darken($green, 40%), 0 4px 0 darken($green, 45%), 0 5px 0 darken($green, 45%), 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 20px 20px rgba(0,0,0,.15);
+$heading1TextShadowBlue: 0 1px 0 darken($blue, 20%), 0 2px 0 darken($blue, 30%), 0 3px 0 darken($blue, 40%), 0 4px 0 darken($blue, 45%), 0 5px 0 darken($blue, 45%), 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 20px 20px rgba(0,0,0,.15);
 
 $linkColor: $green;
 $linkColorHover: lighten( $linkColor, 20% );
@@ -37,8 +40,38 @@ $linkColorHover: lighten( $linkColor, 20% );
 @import "../template/theme";
 // ---------------------------------------------
 
+.reveal section h1.red,
+.reveal section h1 .red {
+	text-shadow: $heading1TextShadowRed
+}
+.reveal section h1.green,
+.reveal section h1 .green {
+	text-shadow: $heading1TextShadowGreen
+}
+.reveal section h1.blue,
+.reveal section h1 .blue {
+	text-shadow: $heading1TextShadowBlue
+}
+
+.reveal .muted {
+	color: darken(white, 50%);
+}
+.reveal .muted.red {
+	color: darken($red, 20%);
+}
+.reveal .muted.green {
+	color: darken($green, 30%);
+}
+.reveal .muted.blue {
+	color: darken($blue, 20%);
+}
+
 .reveal section img {
 	border: none;
+}
+
+.reveal mark {
+	background: #fcff87
 }
 
 .reveal .red,
@@ -85,5 +118,5 @@ $linkColorHover: lighten( $linkColor, 20% );
 .reveal :not(pre) > code {
 	background: #444;
 	border-radius: 5px;
-	padding: 2px 5px;
+	padding: 0px 5px;
 }

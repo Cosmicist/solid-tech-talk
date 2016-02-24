@@ -1,0 +1,42 @@
+<section>
+	<section>
+		<h2>Liskov Substitution Principle</h2>
+		<p>
+            <q>&ldquo;Subtype Requirement: Let <code>f(x)</code> be a property provable about objects <code>x</code> of type <code>T</code>. Then <code>f(y)</code> should be true for objects <code>y</code> of type <code>S</code> where <code>S</code> is a subtype of <code>T</code>.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Barbara Liskov, Data abstraction and hierarchy, 1987_</em></small>
+        </p>
+	</section>
+	<section>
+		<img src="images/scrubs-head-explodes.gif">
+	</section>
+	<section>
+		<p>Siendo <code>X</code> un subtipo <code>T</code></p>
+		<p class="fragment"><code>X</code> tiene que poder ser usada donde se requiera <code>T</code></p>
+		<p class="fragment"><strong>Sin alterar el correcto funcionamiento del programa</strong></p>
+	</section>
+	<section>
+		<h3>¿Mejor?</h3>
+		<img class="fragment" src="images/kinda-misfits.gif">
+	</section>
+	<section>
+		<h3>¿Cómo logramos esto?</h3>
+		<ul>
+			<li class="fragment"><big>Precondiciónes igual o más restrictivas</big></li>
+			<li class="fragment"><big>Postcondiciónes igual o menos restrictivas</big></li>
+		</ul>
+	</section>
+	<section>
+		<h3>Rompamos el ejemplo anterior</h3>
+		<pre><code class="php hljs">class OtherXmlRenderer extends XmlRenderer {
+
+    public function render($data) { // precondición menos restrictiva
+        $out = new stdClass;
+        // magic ¯\_(ツ)_/¯
+        return $out; // postconición más restrictiva / distinta
+    }
+}</code></pre>
+	<p><small><em class="muted"><strong>Aclaración:</strong> esto no es posible en php</em></small></p>
+	</section>
+</section>

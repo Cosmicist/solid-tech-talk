@@ -36,12 +36,11 @@
         </p>
     </section>
     <section>
-        <pre><code style="word-wrap: break-word;" class="php hljs">class Article
-{
+        <pre><code style="word-wrap: break-word;" class="php hljs">class Article {
+
     // ... constructor, getters, setters, etc...
 
-    public function render()
-    {
+    public function render() {
         $format  = '<h1>%s</h1>';
         $format .= '<div class="article-meta">Publicado el %s, por %s</div>';
         $format .= '<div class="article-body">%s</div>';
@@ -55,12 +54,11 @@
         );
     }
 
-    public function save()
-    {
+    public function save() {
         $this->db->insert('articles', [
             'title' => $this->getTitle(),
             'author' => $this->getAuthor()->getId(),
-            'body' => $this->getBody(),
+            // etc...
         ]);
     }
 }</code></pre>

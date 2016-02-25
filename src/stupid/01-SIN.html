@@ -1,0 +1,68 @@
+<SECTION>
+  <section>
+    <h2 class="red">SINGLETON</h2>
+    <p class="fragment fade-in">
+          Si crees que necesitas un Singleton...
+      </p>
+      <p class="fragment fade-in">
+          probablemente no lo necesites.
+      </p>
+  </section>
+  <section>
+    <h3>Por qué?</h3>
+    <ul>
+            <li class="fragment fade-in">Expone una variable global <strong class="fragment highlight-red">(global is evil!)</strong></li>
+            <li class="fragment fade-in">Esconde dependencias</li>
+            <li class="fragment fade-in">Dificulta Unit Testing</li>
+        </ul>
+  </section>
+  <section>
+    <h3>Veamoslo en un ejemplo...</h3>
+    <pre><code>
+public static class MyDbConnection
+{
+  private SQLServerCon connection;
+  private MyDbConnection instance = null;
+
+  private MyDbConnection()
+  {
+    this.connection = new SQLServerCon();
+  }
+
+  public static MyDbConnection GetDbInstance()
+  {
+    if(instance == null)
+    {
+      this.instance = new MyDbConnection();
+    }
+
+    return instance;
+  }
+}
+    </code></pre>
+  </section>
+  <section>
+    <h3 class="red">Que dependencias esconde?</h3>
+    <ul>
+      <li class="fragment fade-in"><code>private SQLServerCon connection;</code><br>connection esta "atada" al tipo de la Db</li>
+      <li class="fragment fade-in">Esto rompe con los principios SRP y O/C...que veremos mas adelante</li>
+    </ul>
+  </section>
+  <section>
+    <h3 class="red">Como impacta en Unit Testing?</h3>
+    <p class="fragment fade-in">
+      Supongamos la siguiente secuencia:
+      <ol>
+        <li class="fragment fade-in">Corremos un test que use la Db</li>
+        <li class="fragment fade-in">Da VERDE</li>
+        <li class="fragment fade-in">Algun proceso modifica nuestro objeto MyDbConnection</li>
+        <li class="fragment fade-in">Corremos el mismo test</li>
+        <li class="fragment fade-in">Puede dar ROJO</li>
+      </ol>
+    </p>
+  </section>
+  <section>
+    <h2 class="red">Como solucionarlo?</h2>
+    <h3 class="fragment fade-in">Nos da el pie para introducir el siguiente principio...</h3>
+  </section>
+</SECTION>

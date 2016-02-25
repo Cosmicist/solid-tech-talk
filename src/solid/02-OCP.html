@@ -61,7 +61,11 @@ $out->render('json');</code></pre>
     <section>
         <h1>SRP <i class="fa fa-check"></i></h1>
 
-        <p><code>Article</code> ya no se renderiza a si mismo</p>
+        <p class="fragment">Bueno, más o menos...</p>
+
+        <p class="fragment"><code>Article</code> ya no se renderiza a si mismo <i class="fa fa-thumbs-up green"></i></fa></p>
+
+        <p class="fragment">Pero...</p>
     </section>
     <section>
         <h1>OCP <i class="fa fa-times red"></i></h1>
@@ -71,6 +75,25 @@ $out->render('json');</code></pre>
         <img class="fragment" src="images/output-knows-too-much.jpg">
     </section>
     <section>
+        <p><big><code>Output</code> sabe la implementación de cada formato.</big></p>
+        <p><big>Esto también viola <strong class="blue">SRP</strong>.</big></p>
+    </section>
+    <section>
+        <h3>¿Por qué?</h3>
+        <p class="fragment"><strong>HTML</strong> es front-end, pero <strong>JSON</strong> y <strong>XML</strong> no necesariamente.</p>
+        <p class="fragment">Puede ser que otras personas no front-enders tengan poder de decisión sobre esto.</p>
+    </section>
+    <section>
+        <h2>¿Si quisieramos <em>corregir</em> un formato o <em>agregar</em> otro?</h2>
+        <p class="fragment">Tendríamos que modificar <code>Output</code></p>
+        <p class="fragment">Potencialmente introduciendo errores indirectamente relacionados al cambio que estamos haciendo.</p>
+    </section>
+    <section>
+        <h3>And that is bad</h3>
+        <img src="images/mackey-mkey.jpg">
+        <h3>mkey?</h3>
+    </section>
+    <section>
         <h3>Code smell: Type checking</h3>
         <ul>
             <li class="fragment"><big><code>switch</code></big></li>
@@ -78,12 +101,6 @@ $out->render('json');</code></pre>
             <li class="fragment"><big><code>is_a</code></big></li>
             <li class="fragment"><big>etc...</big></li>
         </ul>
-    </section>
-    <section>
-        <h2>¿Si quisieramos <em>corregir</em> un formato o <em>agregar</em> otro?</h2>
-        <p class="fragment">Tendríamos que modificar <code>Output</code></p>
-        <p class="fragment">Potencialmente introduciendo errores indirectamente relacionados al cambio que estamos haciendo.</p>
-        <h1 class="fragment">ಠ_ಠ</h1>
     </section>
     <section>
         <h3>Más mejoras!</h3>
@@ -131,7 +148,7 @@ $out->render(new XmlRenderer);</code></pre>
             'title' => $article->getTitle(),
             'content' => $article->getContent(),
             'published_at' => $article->getPublishDate()
-                ->toDateTimeString(),     
+                ->toDateTimeString(),
             // etc...
         ];
     }

@@ -42,14 +42,14 @@ public static class MyDbConnection
     </code></pre>
   </section>
   <section>
-    <h3 class="red">Que dependencias esconde?</h3>
+    <h3>Que dependencias esconde?</h3>
     <ul>
       <li class="fragment fade-in"><code>private SQLServerCon connection;</code><br>connection esta "atada" al tipo de la Db</li>
       <li class="fragment fade-in">Esto rompe con los principios SRP y O/C...que veremos mas adelante</li>
     </ul>
   </section>
   <section>
-    <h3 class="red">Como impacta en Unit Testing?</h3>
+    <h3>Como impacta en Unit Testing?</h3>
     <p class="fragment fade-in">
       Supongamos la siguiente secuencia:
       <ol>
@@ -62,7 +62,7 @@ public static class MyDbConnection
     </p>
   </section>
   <section>
-    <h2 class="red">Como solucionarlo?</h2>
+    <h2>Como solucionarlo?</h2>
     <h3 class="fragment fade-in">Nos da el pie para introducir el siguiente principio...</h3>
   </section>
 </section>

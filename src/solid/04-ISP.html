@@ -1,5 +1,58 @@
 <section>
     <section>
         <h2 class="blue">Interface Segregation Principle</h2>
+        <p><q>The interface-segregation principle (ISP) states that no client should be forced to depend on methods it does not use.</q></p>
+    </section>
+    <section>
+      <h3 class="fragment fade-in">Suena obvio...</h3>
+      <h4 class="fragment fade-in">pero a veces no nos damos cuenta que lo estamos rompiendo</h4>
+    </section>
+    <section>
+      <h3>Supongamos la siguiente interfaz</h3>
+      <pre class="fragment fade-in"><code>
+public interface IVehicle
+{
+  void StartEngine();
+  void Accelerate();
+  void Brake();
+  void LightsOn();
+  void SignalLeft();
+  void SignalRight();
+  void ChangeGear();
+  void StopRadio();
+  void EjectCD();
+}
+      </code></pre>
+    </section>
+    <section>
+      <h3>Que pasa si creamos un vehículo que no tiene stereo?</h3>
+      <ul>
+        <li class="fragment fade-in">Estariamos forzando a implementar metodos innecesarios...</li>
+        <li class="fragment fade-in"><code>StopRadio()</code> y <code>EjectCD()</code></li>
+        <li class="fragment fade-in">Ademas, rompemos el principio SRP</code></li>
+      </ul>
+    </section>
+    <section>
+      <h3>Podríamos volver a plantear las interfaces de esta manera:</h3>
+      <pre class="fragment fade-in"><code>
+public interface ISpeedControl
+{
+  void StartEngine();
+  void Accelerate();
+  void Brake();
+  void ChangeGear();
+}
+
+public interface IRadioControl
+{
+  void StopRadio();
+  void EjectCD();
+}
+      </code></pre>
+    </section>
+    <section>
+      <p>
+        Separando las responsabilidades (SRP) evitamos el uso de "Fat Interfaces"
+      </p>
     </section>
 </section>

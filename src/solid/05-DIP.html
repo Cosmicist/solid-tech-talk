@@ -68,7 +68,7 @@
 
     <section>
         <h3>Poniéndolo en código:</h3>
-        <h4 class="fragment"><code>ArticleManager</code> seria nuestro "High Level"</h4>
+        <p class="fragment"><big><code>ArticleManager</code> seria nuestro "High Level"</big></p>
         <pre class="fragment fade-in"><code>
 public class ArticleManager{
   private IArticleRepository repository;
@@ -91,7 +91,7 @@ public class ArticleManager{
     </section>
 
     <section>
-      <h4><code>IArticleRepository</code> seria nuestro "Low Level"</h4>
+      <h4><code>IArticleRepository</code> seria el contrato para "Low Level"</h4>
       <h5 class="fragment">Pero NO ES UNA IMPLEMENTACIÓN, sino una ABSTRACCIÓN</h5>
         <pre class="fragment fade-in"><code>
 public interface IArticleRepository{
@@ -102,7 +102,7 @@ public interface IArticleRepository{
     </section>
 
     <section>
-      <h4><code>ArticleDbRepo</code> y <code>ArticleMockedRepo</code> serian las implementaciones de "Low Level"</h4>
+      <h4><code>ArticleDbRepo</code> y <code>ArticleMockedRepo</code> serian las implementaciones "Low Level"</h4>
         <pre class="fragment fade-in"><code>
 public class ArticleDbRepo : IArticleRepository{
   public void Save(Article myArticle){
@@ -152,5 +152,35 @@ public class Bindings : NinjectModule{
   }
 }
       </code></pre>
+    </section>
+
+    <section>
+        <h3>Pero... ¿y la <em>"inversión"</em> donde está?</h3>
+
+        <p class="fragment">La arquitectura de un proyecto se divide en distintas capas:</p>
+
+        <ul>
+            <li class="fragment">Capa de negocio <em>(high-level)</em></li>
+            <li class="fragment">Capa de datos <em>(low-level)</em></li>
+            <li class="fragment">Entre otras</li>
+        </ul>
+    </section>
+    <section>
+        <h3>La comunicación es unidireccional</h3>
+        <p class="fragment"><big>
+            high-level <i class="fa fa-arrow-right"></i> low-level.
+        </big></p>
+    </section>
+    <section>
+        <h3>Entonces</h3>
+
+        <p class="fragment"><code>IArticleRepository</code>es parte de la capa de negocio, no de datos</p>
+
+        <p class="fragment">Sus implementaciónes, como <code>ArticleDbRepo</code>, sí forman parte de la capa de datos</p>
+    </section>
+    <section>
+        <h3>¿Por qué?</h3>
+
+        <p class="fragment"><big><code>ArticleManager</code> define el <strong class="green">contrato</strong> que la <em>capa de datos</em> debe implementar para comunicarse con la <em>capa de negocio</em>.</big></p>
     </section>
 </section>

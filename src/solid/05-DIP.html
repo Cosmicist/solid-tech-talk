@@ -92,7 +92,7 @@ public class ArticleManager{
 
     <section>
       <h4><code>IArticleRepository</code> seria el contrato para "Low Level"</h4>
-      <h5 class="fragment">Pero NO ES UNA IMPLEMENTACIÓN, sino una ABSTRACCIÓN</h5>
+      <p class="fragment">Pero <strong class="red">no es una implementación</strong>, sino una <strong class="green">abstracción</strong></p>
         <pre class="fragment fade-in"><code>
 public interface IArticleRepository{
   void Save(Article myArticle);
@@ -128,12 +128,15 @@ public class ArticleMockedRepo : IArticleRepository{
     </section>
 
     <section>
-      <h4>De esta forma...</h4>
+      <h2>De esta forma...</h2>
       <ul>
         <li class="fragment fade-in">Las implementaciones son totalmente independientes</li>
         <li class="fragment fade-in">"High Level" solo interactua con la abstracción <code>IArticleRepository</code></li>
       </ul>
-      <h4 class="fragment">Pero como sabemos que implementación usar?</h4>
+    </section>
+
+    <section>
+        <h2>Pero como sabemos que implementación usar?</h2>
     </section>
 
     <section>
@@ -156,8 +159,11 @@ public class Bindings : NinjectModule{
 
     <section>
         <h3>Pero... ¿y la <em>"inversión"</em> donde está?</h3>
+        <img class="fragment" src="images/y-candela-y-la-inversion.jpg">
+    </section>
 
-        <p class="fragment">La arquitectura de un proyecto se divide en distintas capas:</p>
+    <section>
+        <h3>La arquitectura de un proyecto se divide en distintas capas</h3>
 
         <ul>
             <li class="fragment">Capa de negocio <em>(high-level)</em></li>
@@ -174,7 +180,7 @@ public class Bindings : NinjectModule{
     <section>
         <h3>Entonces</h3>
 
-        <p class="fragment"><code>IArticleRepository</code>es parte de la capa de negocio, no de datos</p>
+        <p class="fragment"><code>IArticleRepository</code> es parte de la capa de negocio, no de datos</p>
 
         <p class="fragment">Sus implementaciónes, como <code>ArticleDbRepo</code>, sí forman parte de la capa de datos</p>
     </section>

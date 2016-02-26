@@ -1,6 +1,12 @@
 <section>
     <section>
         <h2 class="blue">Dependency Inversion Principle</h2>
+    </section>
+    <section>
+        <h3 class="red"><s>Dependency Injection</s></h3>
+        <img class="fragment" src="images/no-rage-face.png">
+    </section>
+    <section>
         <p>
             <q>&ldquo;<strong>A.</strong> High-level modules should not depend on low-level modules. <strong>Both should depend on abstractions</strong>.</q>
         </p>
@@ -34,5 +40,28 @@
         <h3>Código de alto nivel <em>(high-level)</em></h3>
         <p class="fragment"><big>Lo contrario, en general usan código low-level.</big></p>
         <p class="fragment">Por ejemplo: Repository, puede usar PDO, Filesystem, etc.</p>
+    </section>
+
+    <section>
+        <h3>En ambos casos, dependencias abstractas</h3>
+
+        <p class="fragment">
+            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>ArticleRepository</code><br></big>
+        </p>
+        <p class="fragment">
+            <code>ArticleRepository</code> no es una implementación, es una interfaz.
+        </p>
+    </section>
+    <section>
+        <h3>¿Beneficios?</h3>
+        <ul class="fragment">
+            <li>Podemos cambiar la implementación de <code>ArticleRepository</code> cuando sea necesario</li>
+            <li>Sin tener que alterar el codigo del <code>ArticleManager</code></li>
+        </ul>
+    </section>
+
+    <section>
+        <h3>Decoupling FTW</h3>
+        <p>La idea de estos principios es lograr que nuestro codigo quede lo más desacoplado posible.</p>
     </section>
 </section>

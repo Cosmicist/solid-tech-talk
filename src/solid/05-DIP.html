@@ -46,16 +46,16 @@
         <h3>En ambos casos, dependencias abstractas</h3>
 
         <p class="fragment">
-            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>ArticleRepository</code><br></big>
+            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>IArticleRepository</code><br></big>
         </p>
         <p class="fragment">
-            <code>ArticleRepository</code> no es una implementación, es una interfaz.
+            <code>IArticleRepository</code> no es una implementación, es una interfaz.
         </p>
     </section>
     <section>
         <h3>¿Beneficios?</h3>
         <ul class="fragment">
-            <li>Podemos cambiar la implementación de <code>ArticleRepository</code> cuando sea necesario</li>
+            <li>Podemos cambiar la implementación de <code>IArticleRepository</code> cuando sea necesario</li>
             <li>Sin tener que alterar el codigo del <code>ArticleManager</code></li>
         </ul>
     </section>
@@ -63,5 +63,93 @@
     <section>
         <h3>Decoupling FTW</h3>
         <p>La idea de estos principios es lograr que nuestro codigo quede lo más desacoplado posible.</p>
+    </section>
+
+    <section>
+        <h3>Poniéndolo en código:</h3>
+        <h4 class="fragment"><code>ArticleManager</code> seria nuestro "High Level"</h4>
+        <pre class="fragment fade-in"><code>
+public class ArticleManager{
+  private IArticleRepository repository;
+  
+  public ArticleManager(){
+    //Ninject method to resolve dependency
+    repository = this.Kernel.Get&lt;IDmaRepository>();
+  }
+
+  public void SaveArticle(Article myArticle){
+    this.repository.Save(myArticle);
+  }
+  
+  public Article GetArticle(int articleId){
+    this.repository.GetArticle(articleId);
+  }
+}
+        </code></pre>
+
+    </section>
+
+    <section>
+      <h4><code>IArticleRepository</code> seria nuestro "Low Level"</h4>
+      <h5 class="fragment">Pero NO ES UNA IMPLEMENTACIÓN, sino una ABSTRACCIÓN</h5>
+        <pre class="fragment fade-in"><code>
+public interface IArticleRepository{
+  void Save(Article myArticle);
+  void GetArticle(int articleId);
+}
+        </code></pre>
+    </section>
+
+    <section>
+      <h4><code>ArticleDbRepo</code> y <code>ArticleMockedRepo</code> serian las implementaciones de "Low Level"</h4>
+        <pre class="fragment fade-in"><code>
+public class ArticleDbRepo : IArticleRepository{
+  public void Save(Article myArticle){
+    //save article to DB
+  } 
+  
+  public void GetArticle(int articleId){
+    //get article from DB
+  }
+}
+
+public class ArticleMockedRepo : IArticleRepository{
+  public void Save(Article myArticle){
+    //save article to mocked repo (could be an array for instance)
+  } 
+  
+  public void GetArticle(int articleId){
+    //get article from mocked repo (could be an array for instance)
+  }
+}
+        </code></pre>
+
+    </section>
+
+    <section>
+      <h4>De esta forma...</h4>
+      <ul>
+        <li class="fragment fade-in">Las implementaciones son totalmente independientes</li>
+        <li class="fragment fade-in">"High Level" solo interactua con la abstracción <code>IArticleRepository</code></li>
+      </ul>
+      <h4 class="fragment">Pero como sabemos que implementación usar?</h4>
+    </section>
+
+    <section>
+      <p>Usando Ninject (constructor de <code>ArticleManager</code>)</p>
+      <pre class="fragment fade-in"><code>
+public class Bindings : NinjectModule{
+  public override void Load(){
+    if(config == "test"){
+      Bind&lt;IArticle().To&lt;ArticleDbRepo>();
+            //more bindings
+    }
+    else{
+      Bind&lt;IArticle().To&lt;ArticleMockedRepo>();
+      //more bindings
+    }
+  }
+}
+      </code></pre>
     </section>
 </section>

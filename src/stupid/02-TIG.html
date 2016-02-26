@@ -1,5 +1,44 @@
 <section>
   <section>
     <h2 class="red">Tight Coupling</h2>
+    <p class="fragment fade-in">
+        Puede ser una consecuencia del uso del Singleton, pero que es en si?
+    </p>
+    <p class="fragment fade-in">
+        Es el grado de dependencia entre los módulos de nuestra aplicacion.
+    </p>
+  </section>
+  <section>
+    <h3>En otras palabras...</h3>
+    <p class="fragment fade-in">
+        Si se hace un cambio en cierto módulo de la aplicación y esto requiere que a su vez otro modulo sea modificado, entonces decimos que hay acoplamiento entre ellos.
+    </p>
+  </section>
+  <section>
+    <h3>Como podríamos solucionar el problema del punto anterior?</h3>
+    <pre class="fragment fade-in"><code>
+public class MyDbConnection
+{
+  private IDbConnection connection;
+    
+  public MyDbConnection(IDbConnection myConnection)
+  {
+      this.connection = myConnection;
+  }
+    
+}
+public class DbFactory
+{
+  public IDbConnection GetDbInstance(DbType type)
+  {
+    return this.BuildDb(type);
+  }
+    
+  private BuildDb(DbType type)
+  {
+    // build DB
+  }
+}
+    </code></pre>
   </section>
 </section>

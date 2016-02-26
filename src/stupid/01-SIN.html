@@ -17,7 +17,7 @@
         </ul>
   </section>
   <section>
-    <h3>Veamoslo en un ejemplo...</h3>
+    <h3>Veámoslo en un ejemplo...</h3>
     <pre><code>
 public static class MyDbConnection
 {
@@ -38,18 +38,27 @@ public static class MyDbConnection
 
     return instance;
   }
+
+  //Db methods
 }
     </code></pre>
   </section>
   <section>
-    <h3>Que dependencias esconde?</h3>
+    <h3 class="red">Por que esta mal exponer la conexión globalmente?</h3>
+    <ul>
+      <li class="fragment fade-in">Rompe la arquitectura del proyecto <strong>(EJ: 3-tier)</strong></li>
+      <li class="fragment fade-in">Si se modifica en algun punto, <strong>su estado cambia para el resto de la App</strong></li>
+    </ul>
+  </section>
+  <section>
+    <h3 class="red">Que dependencias esconde?</h3>
     <ul>
       <li class="fragment fade-in"><code>private SQLServerCon connection;</code><br>connection esta "atada" al tipo de la Db</li>
       <li class="fragment fade-in">Esto rompe con los principios SRP y O/C...que veremos mas adelante</li>
     </ul>
   </section>
   <section>
-    <h3>Como impacta en Unit Testing?</h3>
+    <h3 class="red">Como impacta en Unit Testing?</h3>
     <p class="fragment fade-in">
       Supongamos la siguiente secuencia:
       <ol>

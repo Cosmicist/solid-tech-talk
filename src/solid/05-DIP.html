@@ -54,10 +54,11 @@
     </section>
     <section>
         <h3>¿Beneficios?</h3>
-        <ul class="fragment">
-            <li>Podemos cambiar la implementación de <code>IArticleRepository</code> cuando sea necesario</li>
-            <li>Sin tener que alterar el codigo del <code>ArticleManager</code></li>
-        </ul>
+        <p class="fragment">Podemos cambiar la implementación de <code>IArticleRepository</code> cuando sea necesario</p>
+
+        <p class="fragment"><strong>Sin tener que alterar el codigo del <code>ArticleManager</code></strong></p>
+
+        <img class="fragment" src="images/chuck-norris-approves.gif">
     </section>
 
     <section>
@@ -71,7 +72,7 @@
         <pre class="fragment fade-in"><code>
 public class ArticleManager{
   private IArticleRepository repository;
-  
+
   public ArticleManager(){
     //Ninject method to resolve dependency
     repository = this.Kernel.Get&lt;IDmaRepository>();
@@ -80,7 +81,7 @@ public class ArticleManager{
   public void SaveArticle(Article myArticle){
     this.repository.Save(myArticle);
   }
-  
+
   public Article GetArticle(int articleId){
     this.repository.GetArticle(articleId);
   }
@@ -106,8 +107,8 @@ public interface IArticleRepository{
 public class ArticleDbRepo : IArticleRepository{
   public void Save(Article myArticle){
     //save article to DB
-  } 
-  
+  }
+
   public void GetArticle(int articleId){
     //get article from DB
   }
@@ -116,8 +117,8 @@ public class ArticleDbRepo : IArticleRepository{
 public class ArticleMockedRepo : IArticleRepository{
   public void Save(Article myArticle){
     //save article to mocked repo (could be an array for instance)
-  } 
-  
+  }
+
   public void GetArticle(int articleId){
     //get article from mocked repo (could be an array for instance)
   }

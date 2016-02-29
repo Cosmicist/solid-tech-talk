@@ -1,0 +1,1019 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+
+        <title>From STUPID to SOLID</title>
+
+        <meta name="description" content="The 5 do's and 500 don'ts of coding safety">
+        <meta name="author" content="Luciano Longo, Federico Orlandau, Mariano Rosiello">
+
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+        <link rel="stylesheet" href="css/reveal.css">
+        <link rel="stylesheet" href="css/theme/graion.css" id="theme">
+
+        <!-- Code syntax highlighting -->
+        <link rel="stylesheet" href="lib/css/hljs.css">
+
+        <!-- Font Awesome -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+        <!-- Printing and PDF exports -->
+        <script>
+            var link = document.createElement( 'link' );
+            link.rel = 'stylesheet';
+            link.type = 'text/css';
+            link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+            document.getElementsByTagName( 'head' )[0].appendChild( link );
+        </script>
+
+        <!--[if lt IE 9]>
+        <script src="lib/js/html5shiv.js"></script>
+        <![endif]-->
+    </head>
+
+    <body>
+
+        <div class="reveal">
+
+            <!-- Any section element inside of this container is displayed as a slide -->
+            <div class="slides">
+                <section>
+                    <section>
+                        <h1>Bienvenidos a...</h1>
+                    </section>
+                    <section>
+                        <img src="images/donny-dont.png">
+                    </section>
+                    <section>
+                        <h3>AKA</h3>
+                        <h2>
+                            <span class="fragment">From <strong class="red">STUPID</strong></span>
+                            <span class="fragment">to <strong class="blue">SOLID</strong></span>
+                        </h2>
+                    </section>
+                </section>
+
+
+                <!-- STUPID -->
+
+                <section>
+
+	<section>
+	    <h2><strong class="red">STUPID</strong></h2>
+	    <ul>
+	        <li class="fragment"><strong class="red">S</strong>ingleton</li>
+	        <li class="fragment"><strong class="red">T</strong>ight Coupling</li>
+	        <li class="fragment"><strong class="red">U</strong>ntestability</li>
+	        <li class="fragment"><strong class="red">P</strong>remature Optimization</li>
+	        <li class="fragment"><strong class="red">I</strong>ndescriptive Naming</li>
+	        <li class="fragment"><strong class="red">D</strong>uplication</li>
+	    </ul>
+    </section>
+	<section>
+		<img src="http://s2.quickmeme.com/img/1c/1c93c3fc40fd11950a16a1b009fcac3c159439b37c435023baa725e572b698ce.jpg">
+	</section>
+</section>
+
+                <!-- Singleton - STUPID -->
+                 <section>
+  <section>
+    <h2 class="red">Singleton</h2>
+    <p class="fragment fade-in">
+          Si crees que necesitas un Singleton...
+      </p>
+      <p class="fragment fade-in">
+          probablemente no lo necesites.
+      </p>
+  </section>
+  <section>
+    <img src="http://images.memes.com/character/meme/dont-remember-asking-you">
+  </section>
+  <section>
+    <h3>Por qué?</h3>
+    <ul>
+            <li class="fragment fade-in">Expone una variable global <strong class="fragment highlight-red">(global is evil!)</strong></li>
+            <li class="fragment fade-in">Esconde dependencias</li>
+            <li class="fragment fade-in">Dificulta Unit Testing</li>
+        </ul>
+  </section>
+  <section>
+    <h3>Veámoslo en un ejemplo...</h3>
+    <pre><code>
+public static class MyDbConnection
+{
+  private SQLServerCon connection;
+  private MyDbConnection instance = null;
+
+  private MyDbConnection()
+  {
+    this.connection = new SQLServerCon();
+  }
+
+  public static MyDbConnection GetDbInstance()
+  {
+    if(instance == null)
+    {
+      this.instance = new MyDbConnection();
+    }
+
+    return instance;
+  }
+
+  //Db methods
+}
+    </code></pre>
+  </section>
+  <section>
+    <h3 class="red">Por que esta mal exponer la conexión globalmente?</h3>
+    <ul>
+      <li class="fragment fade-in">Rompe la arquitectura del proyecto <strong>(EJ: 3-tier)</strong></li>
+      <li class="fragment fade-in">Si se modifica en algun punto, <strong>su estado cambia para el resto de la App</strong></li>
+    </ul>
+  </section>
+  <section>
+    <h3 class="red">Que dependencias esconde?</h3>
+    <ul>
+      <li class="fragment fade-in"><code>private SQLServerCon connection;</code><br>connection esta "atada" al tipo de la Db</li>
+      <li class="fragment fade-in">Esto rompe con los principios SRP y O/C...que veremos mas adelante</li>
+    </ul>
+  </section>
+  <section>
+    <h3 class="red">Como impacta en Unit Testing?</h3>
+    <p class="fragment fade-in">
+      Supongamos la siguiente secuencia:
+      <ol>
+        <li class="fragment fade-in">Corremos un test que use la Db</li>
+        <li class="fragment fade-in">Da VERDE</li>
+        <li class="fragment fade-in">Algun proceso modifica nuestro objeto MyDbConnection</li>
+        <li class="fragment fade-in">Corremos el mismo test</li>
+        <li class="fragment fade-in">Puede dar ROJO</li>
+      </ol>
+    </p>
+  </section>
+  <section>
+    <h2>Como solucionarlo?</h2>
+    <h3 class="fragment fade-in">Nos da el pie para introducir el siguiente principio...</h3>
+  </section>
+</section>
+                <!-- /Singleton - STUPID -->
+
+                <!-- Tight Coupling - STUPID -->
+                 <section>
+  <section>
+    <h2 class="red">Tight Coupling</h2>
+    <p class="fragment fade-in">
+        Puede ser una consecuencia del uso del Singleton, pero que es en si?
+    </p>
+    <p class="fragment fade-in">
+        Es el grado de dependencia entre los módulos de nuestra aplicacion.
+    </p>
+  </section>
+  <section>
+    <h3>En otras palabras...</h3>
+    <p class="fragment fade-in">
+        Si se hace un cambio en cierto módulo de la aplicación y esto requiere que a su vez otro modulo sea modificado, entonces decimos que hay acoplamiento entre ellos.
+    </p>
+  </section>
+  <section>
+    <h3>Como podríamos solucionar el problema del punto anterior?</h3>
+    <pre class="fragment fade-in"><code>
+public class MyDbConnection
+{
+  private IDbConnection connection;
+    
+  public MyDbConnection(IDbConnection myConnection)
+  {
+      this.connection = myConnection;
+  }
+    
+}
+public class DbFactory
+{
+  public IDbConnection GetDbInstance(DbType type)
+  {
+    return this.BuildDb(type);
+  }
+    
+  private BuildDb(DbType type)
+  {
+    // build DB
+  }
+}
+    </code></pre>
+  </section>
+</section>
+                <!-- /Tight Coupling - STUPID -->
+
+                <!-- Untestability - STUPID -->
+                    <section>
+  <section>
+    <h2 class="red">Untestability</h2>
+    <p class="fragment fade-in">
+      Testear no debería ser complicado.
+    </p>
+  </section>
+  <section>
+    <h4>
+      Aún así hay gente que no cubre apropiadamente su código con tests.
+    </h4>
+    <h4 class="fragment fade-in">
+      ¿Por qué?
+    </h4>
+    <p class="fragment fade-in">
+      <b>Tight Coupling</b>.
+    </p>
+
+  </section>
+  <section >
+    <p>
+      Cuando no escribes tests porque “no tenes tiempo” la causa real probablemente es que tu código sea malo, si tu código es de calidad entonces puedes testearlo de forma rápida.
+    </p>
+
+  </section>
+  <section >
+
+    <img src="http://www.quickmeme.com/img/a7/a7f7f520b1746d392c5676d1bd856f5dd4ce0c3f59d1e43a91534b3feabc748b.jpg">
+
+
+  </section>
+</section>
+                <!-- /Untestability - STUPID -->
+
+                <!-- Premature Optimization - STUPID -->
+                    <section>
+  <section >
+    <h2 class="red">Premature optimization</h2>
+    <div class="fragment fade-in">
+      <p>
+        <q>
+        &ldquo;Uno tiende a pensar en factores externos y termina perdiendo tiempo en problemas que quizás nunca sucedan..&rdquo;</q>
+      </p>
+        <p>
+          <small><em>&mdash; Luciano (Lucho) Longo</em></small>
+        </p>
+    </div>
+  </section>
+  <section>
+    <h2>Optimize later!</h2>
+    <h3>No sobre diseñar y no optimizar de más.</h3>
+    <p>
+      Don't code for performance. Code for clarity, correctness and maintainability.
+    </p>
+  </section>
+  <section>
+    <h3>
+      Saber de complejidad algorítmica nos ayuda a distinguir lo que sí vale la pena optimizar
+    </h3>
+    <p>
+      (la optimización que no es prematura)
+    </p>
+    </section>
+</section>
+                <!-- /Premature Optimization - STUPID -->
+
+                <!-- Indescriptive Naming - STUPID -->
+                    <section>
+  <section >
+    <h2 class="red">Indescriptive Naming</h2>
+    <h3 class="fragment fade-in">¿Bastante obvio no?</h3>
+    <h3 class="fragment fade-in">Todavia necesita ser aclarado</h3>
+  </section>
+  <section>
+    <h2>Indescriptive Naming</h2>
+    <p>
+      Nombra tus clases, métodos, atributos y variables adecuadamente.
+    </p>
+  </section>
+  <section>
+    <h2>Indescriptive Naming</h2>
+    <h3>¡No abrevies!</h3>
+    <p class="fragment fade-in">Escribimos código para personas no para las computadoras, ellas no entienden lo que escribes, solo entienden de 0 y 1.</h3>
+  </section>
+  <section>
+    <h2>Los lenguajes de programación son para humanos</h2>
+  </section>
+</section>
+                <!-- /Indescriptive Naming - STUPID -->
+
+                <!-- Duplication - STUPID -->
+                    <section>
+  <section >
+    <h2 class="red">Duplication</h2>
+    <h3 class="fragment fade-in">Duplicar es malo malo malo malo</h3>
+    <h3 class="fragment fade-in">¿Por qué sucede?</h3>
+  </section>
+  <section>
+    <p>
+      Los programadores somos perezosos, entonces sería natural escribir lo menos posible, de todas formas el código duplicado prevalece.
+    </p>
+  </section>
+  <section>
+    <h3>¿Entonces?</h3>
+    <p>Tight coupling, si tu código está altamente acoplado no puedes re utilizarlo</p>
+    <h3 class="fragment fade-in">
+      DRY
+    </h3>
+    <p class="fragment fade-in">
+      Don't Repeat Yourself, keep it simple <b>Graion</b>
+    </p>
+  </section>
+</section>
+                <!-- /Duplication - STUPID -->
+
+                <!-- /STUPID -->
+
+
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+                <!-- SOLID -->
+
+                <section>
+    <section>
+        <h3>¿Estas malas prácticas les son familiares?</h3>
+        <img class="fragment" src="images/bad-code.jpg">
+    </section>
+    <section>
+        <h3>No se sientan mal</h3>
+        <img src="images/feel-bad.gif">
+        <p class="fragment"><big>Nos ha pasado, y nos sigue pasando, a todos</big></p>
+    </section>
+    <section>
+        <h2><strong class="blue">SOLID</strong> al rescate</h2>
+        <p class="fragment"><big>
+            Son una serie de principios para hacer tu codigo más limpio y mantenible.
+        </big></p>
+        <p class="fragment">Esto significa, codigo más desacoplado, facil de modificar y extender.</p>
+    </section>
+    <section>
+        <h3>Pero señor McClure, ¿Que significa SOLID?</h3>
+        <img src="images/sr-mcclure-que-es-solid.jpg">
+    </section>
+    <section>
+        <img src="images/mcclure-huh.jpg">
+    </section>
+    <section>
+        <h1>The End</h1>
+    </section>
+    <section>
+        <h2>Principios <strong class="blue">SOLID</strong></h2>
+        <ul>
+            <li class="fragment"><strong class="blue">S</strong>ingle Responsibility</li>
+            <li class="fragment"><strong class="blue">O</strong>pen/Closed</li>
+            <li class="fragment"><strong class="blue">L</strong>iskov Substitution</li>
+            <li class="fragment"><strong class="blue">I</strong>nterface Segregation</li>
+            <li class="fragment">
+                <strong class="blue">D</strong>ependency Inversion
+                <ul class="fragment">
+                    <li><em><s>Dependency Injection</s></em></li>
+                </ul>
+            </li>
+        </ul>
+    </section>
+</section>
+
+                <!-- SRP - SOLID -->
+<section>
+    <section>
+        <h2 class="blue">Single Responsibility Principle</h2>
+        <p>
+            <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+            &ldquo;...states that each software module should have one and only one reason to change.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Robert (Uncle Bob) C. Martin</em></small>
+        </p>
+    </section>
+
+    <section>
+        <h3>¿Razones para cambiar?</h3>
+        <ul>
+            <li class="fragment fade-in">Refactoring?</li>
+            <li class="fragment fade-in">Bug-fixing?</li>
+        </ul>
+        <p class="fragment fade-in">
+            Estas son <strong class="fragment highlight-red">responsabilidades</strong> del desarollador, no del programa.
+        </p>
+    </section>
+    <section>
+        <img src="images/spiderman-responsibility.jpg">
+    </section>
+    <section>
+        <h2>Responsabilidades!</h2>
+        <p>
+            ¿A quién debe responder el <code>[programa|aplicación|clase|librería|etc]</code>?
+        </p>
+        <p class="fragment fade-in">
+            <big>
+                <strong class="red">Personas</strong> que pueden causar que cambiemos el código.
+            </big>
+        </p>
+    </section>
+    <section>
+        <pre><code style="word-wrap: break-word;" class="php hljs">class Article {
+
+    // ... constructor, getters, setters, etc...
+
+    public function render() {
+        $format  = '<h1>%s</h1>';
+        $format .= '<div class="article-meta">Publicado el %s, por %s</div>';
+        $format .= '<div class="article-body">%s</div>';
+
+        return sprintf(
+            $format,
+            $this->getTitle(),
+            $this->getPublishDate(),
+            $this->getAuthor()->getName(),
+            $this->getBody()
+        );
+    }
+
+    public function save() {
+        $this->db->insert('articles', [
+            'title' => $this->getTitle(),
+            'author' => $this->getAuthor()->getId(),
+            // etc...
+        ]);
+    }
+}</code></pre>
+    </section>
+    <section>
+        <h2>¿Quienes podrían causar que este codigo cambie?</h2>
+
+        <ul>
+            <li class="fragment fade-in"><big>Front-end dudes? <i class="fragment fade-in green fa fa-check"></i></big></li>
+            <li class="fragment fade-in"><big>DBA dudes? <i class="fragment fade-in green fa fa-check"></i></big></li>
+        </ul>
+    </section>
+    <section>
+        <h1>SI</h1>
+        <p class="fragment fade-in"><strong class="red">Siempre</strong> van a haber terceros que causen cambios.</p>
+        <p class="fragment fade-in"><big>Pero!</big></p>
+        <p class="fragment fade-in">
+            <big>Que sea <strong class="green">solo una sola persona</strong> por clase.</big>
+        </p>
+    </section>
+    <section>
+        <h2>¿Mejoras?</h2>
+        <p>
+            <code>render()</code> y <code>save()</code> son responsabilidades extras que <code>Article</code>
+            <strong>no necesita conocer.</strong>
+        </p>
+        <ul>
+            <li class="fragment fade-in">
+                <i class="fa fa-trash fa-fw"></i>
+                <code>render()</code>: puede irse a una vista, o a otra clase si fuera necesario
+            </li>
+            <li class="fragment fade-in">
+                <i class="fa fa-trash fa-fw"></i>
+                <code>save()</code>: lo movemos a un repositorio
+            </li>
+        </ul>
+    </section>
+</section>
+<!-- /SRP - SOLID -->
+
+                <!-- OCP - SOLID -->
+<section>
+    <section>
+        <h2 class="blue">Open/Closed Principle</h2>
+
+        <p>
+            <q>&ldquo;A satisfactory modular decomposition technique must satisfy one more requirement: It should yield modules that are both open and closed.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Bertrand Meyer, 1988</em></small>
+        </p>
+    </section>
+    <section>
+        <iframe data-autoplay width="560" height="315" src="https://www.youtube.com/embed/yqyixwqiCag" frameborder="0" allowfullscreen></iframe>
+    </section>
+    <section>
+        <p>
+            <q cite="http://searchservervirtualization.techtarget.com/definition/Our-Favorite-Technology-Quotations">
+            &ldquo;You should be able to extend the behavior of a system without having to modify that system.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Robert (Uncle Bob) C. Martin</em></small>
+        </p>
+        <h3 class="fragment"><big>¿Mejor?</big></h3>
+    </section>
+    <section>
+        <h3>O sea...</h3>
+        <p class="fragment"><big>Abierta <em class="green">(Open)</em> para <em class="green">extensión</em></big></p>
+        <p class="fragment"><big>Cerrada <em class="green">(Closed)</em> para <em class="green">modificación</em></big></p>
+    </section>
+    <section>
+        <h3>Mejoremos el ejemplo anterior</h3>
+        <p><big>Separamos <code>render()</code> a su propia clase...</big></p>
+    </section>
+    <section>
+        <pre><code class="php hljs">class Output {
+
+    public function __construct(array $data) {
+        $this->data = $data
+    }
+
+    public function render($format = 'html') {
+        $out = '';
+        switch ($format) {
+            case 'html':
+                $out = \View::make('article', $this->getData());
+                break;
+            case 'json':
+                $out = json_encode($this->getData());
+                break;
+            default:
+                throw new Exception("Unexpected format [$format]");
+        }
+        return $out;
+    }
+}
+
+$out = new Output($article->toArray());
+$out->render('json');</code></pre>
+    </section>
+    <section>
+        <h1>SRP <i class="fa fa-check"></i></h1>
+
+        <p class="fragment">Bueno, más o menos...</p>
+
+        <p class="fragment"><code>Article</code> ya no se renderiza a si mismo <i class="fa fa-thumbs-up green"></i></fa></p>
+
+        <p class="fragment">Pero...</p>
+    </section>
+    <section>
+        <h1>OCP <i class="fa fa-times red"></i></h1>
+
+        <p class="fragment"><code>Output</code> sabe demasiado</p>
+
+        <img class="fragment" src="images/output-knows-too-much.jpg">
+    </section>
+    <section>
+        <p><big><code>Output</code> sabe la implementación de cada formato.</big></p>
+        <p><big>Esto también viola <strong class="blue">SRP</strong>.</big></p>
+    </section>
+    <section>
+        <h3>¿Por qué?</h3>
+        <p class="fragment"><strong>HTML</strong> es front-end, pero <strong>JSON</strong> y <strong>XML</strong> no necesariamente.</p>
+        <p class="fragment">Puede ser que otras personas no front-enders tengan poder de decisión sobre esto.</p>
+    </section>
+    <section>
+        <h2>¿Si quisieramos <em>corregir</em> un formato o <em>agregar</em> otro?</h2>
+        <p class="fragment">Tendríamos que modificar <code>Output</code></p>
+        <p class="fragment">Potencialmente introduciendo errores indirectamente relacionados al cambio que estamos haciendo.</p>
+    </section>
+    <section>
+        <h3>And that is bad</h3>
+        <img src="images/mackey-mkey.jpg">
+        <h3>mkey?</h3>
+    </section>
+    <section>
+        <h3>Code smell: Type checking</h3>
+        <ul>
+            <li class="fragment"><big><code>switch</code></big></li>
+            <li class="fragment"><big><code>instanceof</code></big></li>
+            <li class="fragment"><big><code>is_a</code></big></li>
+            <li class="fragment"><big>etc...</big></li>
+        </ul>
+    </section>
+    <section>
+        <h3>Más mejoras!</h3>
+        <pre><code class="php hljs">class Output {
+
+    // ...
+
+    public function render(Renderer $renderer) {
+        return $renderer->render($this->getData());
+    }
+}</code></pre>
+    </section>
+    <section>
+        <pre><code class="php hljs">interface Renderer {
+    /**
+     * @return string
+     */
+    public function render(array $data);
+}
+
+class HtmlRenderer implements Renderer { /* .. */ }
+class JsonRenderer implements Renderer { /* .. */ }
+
+class XmlRenderer implements Renderer {
+
+    public function render(array $data) {
+        $out = '&lt;data>';
+        foreach ($data as $key => $value) {
+            $out .= "&lt;$key>$value&lt;/$key>";
+        }
+        $out .= '&lt;data>';
+
+        return $out;
+    }
+}</code></pre>
+        <pre><code class="php hljs" data-noescape>$out = new Output(<mark>(new ArticleTransformer)->transform($article)</mark>);
+$out->render(new XmlRenderer);</code></pre>
+    </section>
+    <section>
+        <h3>Extra credit</h3>
+        <pre class="fragment"><code class="php hljs">class ArticleTransformer {
+    public function transform(Article $article) {
+        return [
+            'id' => (int) $article->getId(),
+            'title' => $article->getTitle(),
+            'content' => $article->getContent(),
+            'published_at' => $article->getPublishDate()
+                ->toDateTimeString(),
+            // etc...
+        ];
+    }
+}</code></pre>
+    </section>
+</section>
+<!-- /OCP - SOLID -->
+
+                <section>
+	<section>
+		<h2 class="blue">Liskov Substitution Principle</h2>
+		<p>
+            <q>&ldquo;Subtype Requirement: Let <code>f(x)</code> be a property provable about objects <code>x</code> of type <code>T</code>. Then <code>f(y)</code> should be true for objects <code>y</code> of type <code>S</code> where <code>S</code> is a subtype of <code>T</code>.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Barbara Liskov, Data abstraction and hierarchy, 1987</em></small>
+        </p>
+	</section>
+	<section>
+		<img src="images/scrubs-head-explodes.gif">
+	</section>
+	<section>
+		<h3>Simplificando un poco...</h3>
+		<p class="fragment">Siendo <code>X</code> un subtipo <code>T</code></p>
+		<p class="fragment"><code>X</code> tiene que poder ser usada donde se requiera <code>T</code></p>
+		<p class="fragment"><strong>Sin alterar el correcto funcionamiento del programa</strong></p>
+	</section>
+	<section>
+		<h3>¿Mejor?</h3>
+		<img class="fragment" src="images/kinda-misfits.gif">
+	</section>
+	<section>
+		<h3>¿Cómo logramos esto?</h3>
+		<ul>
+			<li class="fragment"><big><strong>Interfaces</strong> <i class="fa fa-star yellow"></i> / Clases abstractas</big></li>
+			<li class="fragment"><big><strong>Precondiciónes</strong> igual o más restrictivas</big></li>
+			<li class="fragment"><big><strong>Postcondiciónes</strong> igual o menos restrictivas</big></li>
+		</ul>
+	</section>
+	<section>
+		<h3>En el ejemplo anterior teníamos</h3>
+		<ul>
+			<li class="fragment"><code>HtmlRenderer</code></li>
+			<li class="fragment"><code>JsonRenderer</code></li>
+			<li class="fragment"><code>XmlRenderer</code></li>
+		</ul>
+		<p class="fragment">Todas subtipos de <code>Renderer</code></p>
+		<p class="fragment">Sus <em>pre</em> y <em>post</em> condiciónes igual de restrictivas</p>
+	</section>
+	<section>
+		<h1>LSP <i class="fa fa-check"></i></h1>
+	</section>
+	<section>
+		<h3>Creo que ya lo habrán notado...</h3>
+		<p class="fragment">
+			Todos los principios de <strong class="green">SOLID</strong>
+			están muy interrelacionados.
+		</p>
+		<p class="fragment">
+			Si se rompe uno, se rompen varios <span class="fragment">o todos.</span>
+		</p>
+	</section>
+	<section>
+		<h3>Veamos un mal ejemplo</h3>
+		<pre><code class="php hljs">class OtherXmlRenderer extends XmlRenderer {
+
+    public function render($data) { // precondición menos restrictiva
+        $out = new stdClass;
+        // magic ¯\_(ツ)_/¯
+        return $out; // postconición más restrictiva / distinta
+    }
+}</code></pre>
+	<p><small><em class="muted"><strong>Aclaración:</strong> esto no es posible en php</em></small></p>
+	</section>
+</section>
+
+                <section>
+    <section>
+        <h2 class="blue">Interface Segregation Principle</h2>
+        <p><q>The interface-segregation principle (ISP) states that no client should be forced to depend on methods it does not use.</q></p>
+    </section>
+    <section>
+      <h3>Suena obvio...</h3>
+      <h4 class="fragment fade-in">pero a veces no nos damos cuenta que lo estamos rompiendo</h4>
+    </section>
+    <section>
+      <h3>Supongamos la siguiente interfaz</h3>
+      <pre class="fragment fade-in"><code>
+public interface IVehicle
+{
+  void StartEngine();
+  void Accelerate();
+  void Brake();
+  void LightsOn();
+  void SignalLeft();
+  void SignalRight();
+  void ChangeGear();
+  void StopRadio();
+  void EjectCD();
+}
+      </code></pre>
+    </section>
+    <section>
+      <h3>Que pasa si creamos un vehículo que no tiene stereo?</h3>
+      <ul>
+        <li class="fragment fade-in">Estariamos forzando a implementar metodos innecesarios...</li>
+        <li class="fragment fade-in"><code>StopRadio()</code> y <code>EjectCD()</code></li>
+        <li class="fragment fade-in">Ademas, rompemos el principio SRP</code></li>
+      </ul>
+    </section>
+    <section>
+      <h3>Podríamos volver a plantear las interfaces de esta manera:</h3>
+      <pre class="fragment fade-in"><code>
+public interface ISpeedControl
+{
+  void StartEngine();
+  void Accelerate();
+  void Brake();
+  void ChangeGear();
+}
+
+public interface IRadioControl
+{
+  void StopRadio();
+  void EjectCD();
+}
+      </code></pre>
+    </section>
+    <section>
+      <p>
+        Separando las responsabilidades (SRP) evitamos el uso de "Fat Interfaces"
+      </p>
+      <img class="fragment fade-in" src="images/yeahDude.jpg">
+    </section>
+</section>
+
+                <section>
+    <section>
+        <h2 class="blue">Dependency Inversion Principle</h2>
+    </section>
+    <section>
+        <h3 class="red"><s>Dependency Injection</s></h3>
+        <img class="fragment" src="images/no-rage-face.png">
+    </section>
+    <section>
+        <p>
+            <q>&ldquo;<strong>A.</strong> High-level modules should not depend on low-level modules. <strong>Both should depend on abstractions</strong>.</q>
+        </p>
+        <p>
+            <q><strong>B.</strong> Abstractions should not depend upon details. <strong>Details should depend upon abstractions</strong>.&rdquo;</q>
+        </p>
+        <p>
+            <small><em>&mdash; Robert (Uncle Bob) C. Martin, Agile Software Development, Principles, Patterns, and Practices</em></small>
+        </p>
+    </section>
+    <section data-background="images/wat.jpg">
+        <h2>&nbsp;</h2>
+        <h2>&nbsp;</h2>
+        <h2>&nbsp;</h2>
+        <h2>&nbsp;</h2>
+        <h3>&nbsp;</h3>
+        <h1>wat</h1>
+    </section>
+
+    <section>
+        <h2>¿High-level? ¿Low-level?</h2>
+    </section>
+
+    <section>
+        <h3>Código de bajo nivel <em>(low-level)</em></h3>
+        <p class="fragment"><big>Código que se concentra en detalles.</big></p>
+        <p class="fragment">Por ejemplo: PDO, MongoDB, Filesystem, etc.</p>
+    </section>
+
+    <section>
+        <h3>Código de alto nivel <em>(high-level)</em></h3>
+        <p class="fragment"><big>Lo contrario, en general usan código low-level.</big></p>
+        <p class="fragment">Por ejemplo: Repository, puede usar PDO, Filesystem, etc.</p>
+    </section>
+
+    <section>
+        <h3>En ambos casos, dependencias abstractas</h3>
+
+        <p class="fragment">
+            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>IArticleRepository</code><br></big>
+        </p>
+        <p class="fragment">
+            <code>IArticleRepository</code> no es una implementación, es una interfaz.
+        </p>
+    </section>
+    <section>
+        <h3>¿Beneficios?</h3>
+        <p class="fragment">Podemos cambiar la implementación de <code>IArticleRepository</code> cuando sea necesario</p>
+
+        <p class="fragment"><strong>Sin tener que alterar el codigo del <code>ArticleManager</code></strong></p>
+
+        <img class="fragment" src="images/chuck-norris-approves.gif">
+    </section>
+
+    <section>
+        <h3>Decoupling FTW</h3>
+        <p>La idea de estos principios es lograr que nuestro codigo quede lo más desacoplado posible.</p>
+    </section>
+
+    <section>
+        <h3>Poniéndolo en código:</h3>
+        <p class="fragment"><big><code>ArticleManager</code> seria nuestro "High Level"</big></p>
+        <pre class="fragment fade-in"><code>
+public class ArticleManager{
+  private IArticleRepository repository;
+
+  public ArticleManager(){
+    //Ninject method to resolve dependency
+    repository = this.Kernel.Get&lt;IDmaRepository>();
+  }
+
+  public void SaveArticle(Article myArticle){
+    this.repository.Save(myArticle);
+  }
+
+  public Article GetArticle(int articleId){
+    this.repository.GetArticle(articleId);
+  }
+}
+        </code></pre>
+
+    </section>
+
+    <section>
+      <h4><code>IArticleRepository</code> seria el contrato para "Low Level"</h4>
+      <p class="fragment">Pero <strong class="red">no es una implementación</strong>, sino una <strong class="green">abstracción</strong></p>
+        <pre class="fragment fade-in"><code>
+public interface IArticleRepository{
+  void Save(Article myArticle);
+  void GetArticle(int articleId);
+}
+        </code></pre>
+    </section>
+
+    <section>
+      <h4><code>ArticleDbRepo</code> y <code>ArticleMockedRepo</code> serian las implementaciones "Low Level"</h4>
+        <pre class="fragment fade-in"><code>
+public class ArticleDbRepo : IArticleRepository{
+  public void Save(Article myArticle){
+    //save article to DB
+  }
+
+  public void GetArticle(int articleId){
+    //get article from DB
+  }
+}
+
+public class ArticleMockedRepo : IArticleRepository{
+  public void Save(Article myArticle){
+    //save article to mocked repo (could be an array for instance)
+  }
+
+  public void GetArticle(int articleId){
+    //get article from mocked repo (could be an array for instance)
+  }
+}
+        </code></pre>
+
+    </section>
+
+    <section>
+      <h2>De esta forma...</h2>
+      <ul>
+        <li class="fragment fade-in">Las implementaciones son totalmente independientes</li>
+        <li class="fragment fade-in">"High Level" solo interactua con la abstracción <code>IArticleRepository</code></li>
+      </ul>
+    </section>
+
+    <section>
+        <h2>Pero como sabemos que implementación usar?</h2>
+    </section>
+
+    <section>
+      <p>Usando Ninject (constructor de <code>ArticleManager</code>)</p>
+      <pre class="fragment fade-in"><code>
+public class Bindings : NinjectModule{
+  public override void Load(){
+    if(config == "test"){
+      Bind&lt;IArticle().To&lt;ArticleDbRepo>();
+            //more bindings
+    }
+    else{
+      Bind&lt;IArticle().To&lt;ArticleMockedRepo>();
+      //more bindings
+    }
+  }
+}
+      </code></pre>
+    </section>
+
+    <section>
+        <h3>Pero... ¿y la <em>"inversión"</em> donde está?</h3>
+        <img class="fragment" src="images/y-candela-y-la-inversion.jpg">
+    </section>
+
+    <section>
+        <h3>La arquitectura de un proyecto se divide en distintas capas</h3>
+
+        <ul>
+            <li class="fragment">Capa de negocio <em>(high-level)</em></li>
+            <li class="fragment">Capa de datos <em>(low-level)</em></li>
+            <li class="fragment">Entre otras</li>
+        </ul>
+    </section>
+    <section>
+        <h3>La comunicación es unidireccional</h3>
+        <p class="fragment"><big>
+            high-level <i class="fa fa-arrow-right"></i> low-level.
+        </big></p>
+    </section>
+    <section>
+        <h3>Entonces</h3>
+
+        <p class="fragment"><code>IArticleRepository</code> es parte de la capa de negocio, no de datos</p>
+
+        <p class="fragment">Sus implementaciónes, como <code>ArticleDbRepo</code>, sí forman parte de la capa de datos</p>
+    </section>
+    <section>
+        <h3>¿Por qué?</h3>
+
+        <p class="fragment"><big><code>ArticleManager</code> define el <strong class="green">contrato</strong> que la <em>capa de datos</em> debe implementar para comunicarse con la <em>capa de negocio</em>.</big></p>
+    </section>
+</section>
+
+                <!-- /SOLID -->
+
+
+                <!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
+
+
+                <!-- The End -->
+                <section>
+                    <h2>Ahora si, llegó la parte que mas les gusta!</h2>
+                </section>
+                <section>
+                    <h2>Juntense en grupos de a 3</h2>
+                </section>
+                <section data-background="images/laughs-at-audience.gif">
+                </section>
+                <section>
+                    <h1>FIN!</h1>
+                </section>
+                <section>
+                    <h1>¿Preguntas?</h1>
+                </section>
+                <section>
+                    <h1>Gracias!</h1>
+                </section>
+                <!-- /The End -->
+            </div>
+        </div>
+
+        <script src="lib/js/head.min.js"></script>
+        <script src="js/reveal.js"></script>
+
+        <script>
+
+            // Full list of configuration options available at:
+            // https://github.com/hakimel/reveal.js#configuration
+            Reveal.initialize({
+                controls: true,
+                progress: true,
+                history: true,
+                center: true,
+
+                transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+                // Optional reveal.js plugins
+                dependencies: [
+                    { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+                    { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+                    { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+                    { src: 'plugin/zoom-js/zoom.js', async: true },
+                    { src: 'plugin/notes/notes.js', async: true }
+                ]
+            });
+
+        </script>
+
+    </body>
+</html>

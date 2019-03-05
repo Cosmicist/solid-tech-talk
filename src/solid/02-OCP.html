@@ -113,7 +113,7 @@ $out->render('json');</code></pre>
     }
 }</code></pre>
     </section>
-    <section>
+    <section id="code-challenge">
         <pre><code class="php hljs">interface Renderer {
     /**
      * @return string
@@ -138,6 +138,8 @@ class XmlRenderer implements Renderer {
 }</code></pre>
         <pre><code class="php hljs" data-noescape>$out = new Output(<mark>(new ArticleTransformer)->transform($article)</mark>);
 $out->render(new XmlRenderer);</code></pre>
+
+        <a href="#/the-end">&raquo;</a>
     </section>
     <section>
         <h3>Extra credit</h3>

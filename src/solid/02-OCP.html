@@ -39,7 +39,7 @@
         $this->data = $data
     }
 
-    public function render($format = 'html') {
+    public function render(string $format = 'html'): string {
         $out = '';
         switch ($format) {
             case 'html':
@@ -59,7 +59,7 @@ $out = new Output($article->toArray());
 $out->render('json');</code></pre>
     </section>
     <section>
-        <h1>SRP <i class="fa fa-check"></i></h1>
+        <h1>SRP <i class="fa fa-check green"></i></h1>
 
         <p class="fragment">Bueno, más o menos...</p>
 
@@ -108,7 +108,7 @@ $out->render('json');</code></pre>
 
     // ...
 
-    public function render(Renderer $renderer) {
+    public function render(Renderer $renderer): string {
         return $renderer->render($this->getData());
     }
 }</code></pre>
@@ -118,7 +118,7 @@ $out->render('json');</code></pre>
     /**
      * @return string
      */
-    public function render(array $data);
+    public function render(array $data): string;
 }
 
 class HtmlRenderer implements Renderer { /* .. */ }
@@ -126,7 +126,7 @@ class JsonRenderer implements Renderer { /* .. */ }
 
 class XmlRenderer implements Renderer {
 
-    public function render(array $data) {
+    public function render(array $data): string {
         $out = '&lt;data>';
         foreach ($data as $key => $value) {
             $out .= "&lt;$key>$value&lt;/$key>";
@@ -142,7 +142,7 @@ $out->render(new XmlRenderer);</code></pre>
     <section>
         <h3>Extra credit</h3>
         <pre class="fragment"><code class="php hljs">class ArticleTransformer {
-    public function transform(Article $article) {
+    public function transform(Article $article): array {
         return [
             'id' => (int) $article->getId(),
             'title' => $article->getTitle(),

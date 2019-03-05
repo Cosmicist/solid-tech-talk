@@ -9,18 +9,20 @@
     </section>
     <section>
       <h3>Supongamos la siguiente interfaz</h3>
-      <pre class="fragment fade-in"><code>
-public interface IVehicle
+      <pre class="fragment fade-in"><code class="php hljs">
+interface Vehicle
 {
-  void StartEngine();
-  void Accelerate();
-  void Brake();
-  void LightsOn();
-  void SignalLeft();
-  void SignalRight();
-  void ChangeGear();
-  void StopRadio();
-  void EjectCD();
+    public function startEngine();
+    public function accelerate();
+    public function brake();
+    public function lightsOn();
+    public function lightsOff();
+    public function signalLeft();
+    public function signalRight();
+    public function changeGear(int $num);
+    public function startRadio(float $dial);
+    public function stopRadio();
+    public function ejectCD();
 }
       </code></pre>
     </section>
@@ -28,25 +30,26 @@ public interface IVehicle
       <h3>Que pasa si creamos un vehículo que no tiene stereo?</h3>
       <ul>
         <li class="fragment fade-in">Estariamos forzando a implementar metodos innecesarios...</li>
-        <li class="fragment fade-in"><code>StopRadio()</code> y <code>EjectCD()</code></li>
+        <li class="fragment fade-in"><code>stopRadio()</code> y <code>ejectCD()</code></li>
         <li class="fragment fade-in">Ademas, rompemos el principio SRP</code></li>
       </ul>
     </section>
     <section>
       <h3>Podríamos volver a plantear las interfaces de esta manera:</h3>
-      <pre class="fragment fade-in"><code>
-public interface ISpeedControl
+      <pre class="fragment fade-in"><code class="php hljs">
+public interface SpeedControl
 {
-  void StartEngine();
-  void Accelerate();
-  void Brake();
-  void ChangeGear();
+    public function startEngine();
+    public function accelerate();
+    public function brake();
+    public function changeGear(int $num);
 }
 
-public interface IRadioControl
+public interface RadioControl
 {
-  void StopRadio();
-  void EjectCD();
+    public function startRadio(float $dial);
+    public function stopRadio();
+    public function ejectCD();
 }
       </code></pre>
     </section>

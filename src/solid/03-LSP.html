@@ -40,7 +40,7 @@
 		<p class="fragment">Sus <em>pre</em> y <em>post</em> condiciónes igual de restrictivas</p>
 	</section>
 	<section>
-		<h1>LSP <i class="fa fa-check"></i></h1>
+		<h1>LSP <i class="fa fa-check green"></i></h1>
 	</section>
 	<section>
 		<h3>Creo que ya lo habrán notado...</h3>
@@ -56,10 +56,10 @@
 		<h3>Veamos un mal ejemplo</h3>
 		<pre><code class="php hljs">class OtherXmlRenderer extends XmlRenderer {
 
-    public function render($data) { // precondición menos restrictiva
+    public function render($data) { // precondición menos restrictiva (no hay typehints)
         $out = new stdClass;
         // magic ¯\_(ツ)_/¯
-        return $out; // postconición más restrictiva / distinta
+        return $out; // postconición más restrictiva / distinta (obj !== array)
     }
 }</code></pre>
 	<p><small><em class="muted"><strong>Aclaración:</strong> esto no es posible en php</em></small></p>

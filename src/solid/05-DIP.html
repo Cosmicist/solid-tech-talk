@@ -46,15 +46,15 @@
         <h3>En ambos casos, dependencias abstractas</h3>
 
         <p class="fragment">
-            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>IArticleRepository</code><br></big>
+            <big><code>ArticleManager</code> <i class="fa fa-arrow-right"></i> <code>ArticleRepository</code><br></big>
         </p>
         <p class="fragment">
-            <code>IArticleRepository</code> no es una implementación, es una interfaz.
+            <code>ArticleRepository</code> no es una implementación, es una abstracción (interfaz en este caso).
         </p>
     </section>
     <section>
         <h3>¿Beneficios?</h3>
-        <p class="fragment">Podemos cambiar la implementación de <code>IArticleRepository</code> cuando sea necesario</p>
+        <p class="fragment">Podemos cambiar la implementación de <code>ArticleRepository</code> cuando sea necesario</p>
 
         <p class="fragment"><strong>Sin tener que alterar el codigo del <code>ArticleManager</code></strong></p>
 
@@ -69,34 +69,33 @@
     <section>
         <h3>Poniéndolo en código:</h3>
         <p class="fragment"><big><code>ArticleManager</code> seria nuestro "High Level"</big></p>
-        <pre class="fragment fade-in"><code>
-public class ArticleManager{
-  private IArticleRepository repository;
+        <pre class="fragment fade-in"><code class="php hljs">
+class ArticleManager {
+    private $repository;
 
-  public ArticleManager(){
-    //Ninject method to resolve dependency
-    repository = this.Kernel.Get&lt;IDmaRepository>();
-  }
+    public function __construct(ArticleRepository $repository) {
+        $this->repository = $repository;
+    }
 
-  public void SaveArticle(Article myArticle){
-    this.repository.Save(myArticle);
-  }
+    public function save(Article $article) {
+        $this->repository->save($article);
+    }
 
-  public Article GetArticle(int articleId){
-    this.repository.GetArticle(articleId);
-  }
+    public function getArticle(int $articleId): Article {
+        $this->repository->getArticle($articleId);
+    }
 }
         </code></pre>
 
     </section>
 
     <section>
-      <h4><code>IArticleRepository</code> seria el contrato para "Low Level"</h4>
+      <h4><code>ArticleRepository</code> seria el contrato para "Low Level"</h4>
       <p class="fragment">Pero <strong class="red">no es una implementación</strong>, sino una <strong class="green">abstracción</strong></p>
         <pre class="fragment fade-in"><code>
-public interface IArticleRepository{
-  void Save(Article myArticle);
-  void GetArticle(int articleId);
+interface ArticleRepository {
+  public function save(Article $article);
+  public function getArticle(int $articleId): Article;
 }
         </code></pre>
     </section>
@@ -104,22 +103,22 @@ public interface IArticleRepository{
     <section>
       <h4><code>ArticleDbRepo</code> y <code>ArticleMockedRepo</code> serian las implementaciones "Low Level"</h4>
         <pre class="fragment fade-in"><code>
-public class ArticleDbRepo : IArticleRepository{
-  public void Save(Article myArticle){
+class ArticleDbRepo implements ArticleRepository {
+  public function save(Article $article) {
     //save article to DB
   }
 
-  public void GetArticle(int articleId){
+  public function getArticle(int $articleId): Article {
     //get article from DB
   }
 }
 
-public class ArticleMockedRepo : IArticleRepository{
-  public void Save(Article myArticle){
+class ArticleMockedRepo implements ArticleRepository{
+  public function save(Article $article) {
     //save article to mocked repo (could be an array for instance)
   }
 
-  public void GetArticle(int articleId){
+  public function getArticle(int $articleId): Article {
     //get article from mocked repo (could be an array for instance)
   }
 }
@@ -131,7 +130,7 @@ public class ArticleMockedRepo : IArticleRepository{
       <h2>De esta forma...</h2>
       <ul>
         <li class="fragment fade-in">Las implementaciones son totalmente independientes</li>
-        <li class="fragment fade-in">"High Level" solo interactua con la abstracción <code>IArticleRepository</code></li>
+        <li class="fragment fade-in">"High Level" solo interactua con la abstracción <code>ArticleRepository</code></li>
       </ul>
     </section>
 
@@ -140,21 +139,17 @@ public class ArticleMockedRepo : IArticleRepository{
     </section>
 
     <section>
-      <p>Usando Ninject (constructor de <code>ArticleManager</code>)</p>
-      <pre class="fragment fade-in"><code>
-public class Bindings : NinjectModule{
-  public override void Load(){
-    if(config == "test"){
-      Bind&lt;IArticle().To&lt;ArticleDbRepo>();
-            //more bindings
-    }
-    else{
-      Bind&lt;IArticle().To&lt;ArticleMockedRepo>();
-      //more bindings
-    }
-  }
-}
-      </code></pre>
+        <p>Con algún tipo de container</p>
+        <p class="fragment fade-in">Laravel tiene su propio IoC (Inversion of Control Container)</p>
+        <p class="fragment fade-in">Pero hay otros, como el League Container</p>
+        <p class="fragment fade-in">Veamos un ejemplo del IoC Container de Laravel</p>
+        <pre class="fragment fade-in"><code class="php hljs">
+$this->app->bind(ArticleRepository::class, function () {
+    return app()->environment('test')
+        ? new ArticleMockedRepo
+        : new ArticleDbRepo;
+})
+        </code></pre>
     </section>
 
     <section>
@@ -180,7 +175,7 @@ public class Bindings : NinjectModule{
     <section>
         <h3>Entonces</h3>
 
-        <p class="fragment"><code>IArticleRepository</code> es parte de la capa de negocio, no de datos</p>
+        <p class="fragment"><code>ArticleRepository</code> es parte de la capa de negocio, no de datos</p>
 
         <p class="fragment">Sus implementaciónes, como <code>ArticleDbRepo</code>, sí forman parte de la capa de datos</p>
     </section>

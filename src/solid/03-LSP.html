@@ -64,4 +64,38 @@
 }</code></pre>
 	<p><small><em class="muted"><strong>Aclaración:</strong> esto no es posible en php</em></small></p>
 	</section>
+	<section>
+		<h3>Veamos un gran ejemplo</h3>
+		<pre><code class="php hljs">interface ISandwicheable
+{
+	public function getIngredients() : string;
+}
+
+class SambucheBondiola implements ISandwicheable
+{
+	public function getIngredients() : string
+	{
+		return 'Buen pan, buena mostaza, la bondiola esta un poco seca'
+	}
+}
+
+class SambucheSorpresaDeFiambres implements ISandwicheable
+{
+	public function getIngredients() : string
+	{
+		return 'Buen pan, buena mostaza, muchos fiambres'
+	}
+}
+
+class SomelierDeSambuches
+{
+	public function evaluarIngredientesDeSambuches(ISandwicheable $sambuche)
+	{
+		$sambuche->getIngredients;
+		// evaluando ingredientes
+		// algo
+		// fin
+	}
+}</code></pre>
+	</section>
 </section>

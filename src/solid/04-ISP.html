@@ -37,19 +37,39 @@ interface Vehicle
     <section>
       <h3>Podríamos volver a plantear las interfaces de esta manera:</h3>
       <pre class="fragment fade-in"><code class="php hljs">
-public interface SpeedControl
-{
+interface SpeedControl {
     public function startEngine();
     public function accelerate();
     public function brake();
     public function changeGear(int $num);
 }
 
-public interface RadioControl
-{
+interface MediaControl {
     public function startRadio(float $dial);
     public function stopRadio();
     public function ejectCD();
+}
+
+interface Vehicle {
+    public function lightsOn();
+    public function lightsOff();
+    public function signalLeft();
+    public function signalRight();
+    public function checkFunctionalities();
+}
+
+class Fiat600MedioGolpeadito implements Vehicle, SpeedControl {
+    public function checkFunctionalities() {
+        // la implementacion segun el vehiculo
+    }
+}
+
+class VTVService {
+  public function __construct (Vehicle $vehicle) { ... }
+
+  public function runServiceChecks() {
+      $this->vehicle->checkFunctionalities();
+  }
 }
       </code></pre>
     </section>

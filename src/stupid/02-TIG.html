@@ -17,28 +17,34 @@
   <section>
     <h3>Como podríamos solucionar el problema del punto anterior?</h3>
     <pre class="fragment fade-in"><code>
-public class MyDbConnection
+class DBLogger implements LoggerInterface
 {
-  private IDbConnection connection;
+  /** @var DBConnectionInterface */
+  private $connection;
     
-  public MyDbConnection(IDbConnection myConnection)
-  {
-      this.connection = myConnection;
+  public function __construct(DBConnectionInterface $myConnection) {
+      $this->connection = $myConnection;
   }
-    
-}
-public class DbFactory
-{
-  public IDbConnection GetDbInstance(DbType type)
-  {
-    return this.BuildDb(type);
-  }
-    
-  private BuildDb(DbType type)
-  {
-    // build DB
+
+  public function log($message) {
+    $this->connection->insert(...)
   }
 }
+
+class FileLogger implements LoggerInterface {}
+
+class Logger implements LoggerInterface {
+  public function __construct (LoggerInterface $logger) {
+      $this->logger = $logger;
+  }
+
+  public function log($message) {
+    $this->logger->log($message);
+  }
+}
+
+$logger = new Logger(new DBLogger(new PSQLConnection(...)));
+$logger = new Logger(new FileLogger($file));
     </code></pre>
   </section>
 </section>

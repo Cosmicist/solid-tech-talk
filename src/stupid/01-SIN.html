@@ -17,46 +17,50 @@
             <li class="fragment fade-in">Expone una variable global <strong class="fragment highlight-red">(global is evil!)</strong></li>
             <li class="fragment fade-in">Esconde dependencias</li>
             <li class="fragment fade-in">Dificulta Unit Testing</li>
+            <li class="fragment fade-in">Crea acoplamiento</li>
         </ul>
   </section>
   <section>
     <h3>Veámoslo en un ejemplo...</h3>
     <pre><code>
-public static class MyDbConnection
+class DBLogger
 {
-  private SQLServerCon connection;
-  private MyDbConnection instance = null;
+  /** @var PSQLConnection */
+  private $connection;
 
-  private MyDbConnection()
-  {
-    this.connection = new SQLServerCon();
+  /** @var MyDbConnection */
+  private $instance = null;
+
+  private function __construct() {
+    $this->connection = new PSQLConnection();
   }
 
-  public static MyDbConnection GetDbInstance()
-  {
-    if(instance == null)
-    {
-      this.instance = new MyDbConnection();
+  public static getInstance() {
+    if (instance === null) {
+      $this->instance = new static;
     }
-
     return instance;
   }
 
-  //Db methods
+  public function log($message) {
+    // insert message in log db
+  }
 }
     </code></pre>
   </section>
   <section>
-    <h3 class="red">Por que esta mal exponer la conexión globalmente?</h3>
+    <h3 class="red">¿Por qué esta mal?</h3>
     <ul>
-      <li class="fragment fade-in">Rompe la arquitectura del proyecto <strong>(EJ: 3-tier)</strong></li>
+      <li class="fragment fade-in">Rompe la arquitectura del proyecto</li>
       <li class="fragment fade-in">Si se modifica en algun punto, <strong>su estado cambia para el resto de la App</strong></li>
+      <li class="fragment fade-in">Hace imposible testear clases que usen este singleton sin hacer cambios en la db</li>
     </ul>
   </section>
   <section>
-    <h3 class="red">Que dependencias esconde?</h3>
+    <h3 class="red">¿Que dependencias esconde?</h3>
     <ul>
-      <li class="fragment fade-in"><code>private SQLServerCon connection;</code><br>connection esta "atada" al tipo de la Db</li>
+      <li class="fragment fade-in"><code>private $connection (PSQLConnection)</code>
+        <br>connection esta "atada" al tipo específico de DB</li>
       <li class="fragment fade-in">Esto rompe con los principios SRP y O/C...que veremos mas adelante</li>
     </ul>
   </section>

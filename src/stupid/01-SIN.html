@@ -14,7 +14,7 @@
   <section>
     <h3>Por qué?</h3>
     <ul>
-            <li class="fragment fade-in">Expone una variable global <strong class="fragment highlight-red">(global is evil!)</strong></li>
+            <li class="fragment fade-in">Expone estado global <strong class="fragment highlight-red">(global is evil!)</strong></li>
             <li class="fragment fade-in">Esconde dependencias</li>
             <li class="fragment fade-in">Dificulta Unit Testing</li>
             <li class="fragment fade-in">Crea acoplamiento</li>
@@ -35,7 +35,7 @@ class DBLogger
     $this->connection = new PSQLConnection();
   }
 
-  public static getInstance() {
+  public static function getInstance() {
     if (instance === null) {
       $this->instance = new static;
     }
